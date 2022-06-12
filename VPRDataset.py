@@ -1,3 +1,4 @@
+# Code adapted  from https://lava-nc.org/lava-lib-dl/slayer/notebooks/nmnist/train.html
 
 import re
 import pandas as pd

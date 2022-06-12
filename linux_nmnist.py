@@ -1,3 +1,5 @@
+# Code taken directly from https://lava-nc.org/lava-lib-dl/slayer/notebooks/nmnist/train.html
+
 import os, sys
 import glob
 import zipfile
