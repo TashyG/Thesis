@@ -66,8 +66,8 @@ class Network(torch.nn.Module):
 trained_folder = 'Trained'
 os.makedirs(trained_folder, exist_ok=True)
 
-# device = torch.device('cpu')
-device = torch.device('cuda')
+device = torch.device('cpu')
+#device = torch.device('cuda')
 
 net = Network().to(device)
 
@@ -79,18 +79,18 @@ testing_set  = NMNISTDataset(train=False)
 train_loader = DataLoader(dataset=training_set, batch_size=32, shuffle=True)
 test_loader  = DataLoader(dataset=testing_set , batch_size=32, shuffle=True)
 
-for i in range(5):
-    spike_tensor, label = testing_set[np.random.randint(len(testing_set))]
-    spike_tensor = spike_tensor.reshape(2, 34, 34, -1)
-    event = slayer.io.tensor_to_event(spike_tensor.cpu().data.numpy())
-    anim = event.anim(plt.figure(figsize=(5, 5)), frame_rate=240)
-    anim.save(f'gifs/input{i}.gif', animation.PillowWriter(fps=24), dpi=300)
+# for i in range(5):
+#     spike_tensor, label = testing_set[np.random.randint(len(testing_set))]
+#     spike_tensor = spike_tensor.reshape(2, 34, 34, -1)
+#     event = slayer.io.tensor_to_event(spike_tensor.cpu().data.numpy())
+#     anim = event.anim(plt.figure(figsize=(5, 5)), frame_rate=240)
+#     anim.save(f'gifs/input{i}.gif', animation.PillowWriter(fps=24), dpi=300)
 
-gif_td = lambda gif: f'<td> <img src="{gif}" alt="Drawing" style="height: 250px;"/> </td>'
-header = '<table><tr>'
-images = ' '.join([gif_td(f'gifs/input{i}.gif') for i in range(5)])
-footer = '</tr></table>'
-display.HTML(header + images + footer)
+# gif_td = lambda gif: f'<td> <img src="{gif}" alt="Drawing" style="height: 250px;"/> </td>'
+# header = '<table><tr>'
+# images = ' '.join([gif_td(f'gifs/input{i}.gif') for i in range(5)])
+# footer = '</tr></table>'
+# display.HTML(header + images + footer)
 
 error = slayer.loss.SpikeRate(true_rate=0.2, false_rate=0.03, reduction='sum').to(device)
 
@@ -101,6 +101,8 @@ epochs = 100
 
 for epoch in range(epochs):
     for i, (input, label) in enumerate(train_loader): # training loop
+        print(input.shape)
+        print(label)
         output = assistant.train(input, label)
     print(f'\r[Epoch {epoch:2d}/{epochs}] {stats}', end='')
 

@@ -111,7 +111,10 @@ def chopData(event_stream, start_seconds, end_seconds):
 
     chopped_stream['t'] -= chop_start
 
-    return chopped_stream
+    # For now just choose the first 1000 rows
+    chopped_800 = chopped_stream.iloc[0:800]
+
+    return chopped_800
     
 
 
@@ -221,12 +224,12 @@ class VPRDataset(Dataset):
         # Find the place label
         num_places = self.stream_length/self.place_duration
         label = int(i % (num_places))
-        print("The sample number is: " + str(i) + " with a label of: " + str(label))
+        #print("The sample number is: " + str(i) + " with a label of: " + str(label))
 
         # Find the sample length and number of time bins
         sample_length = len(self.samples[i])
         num_time_bins = int(sample_length/self.sampling_time)
-        print("The sample Length is " + str(num_time_bins))
+        #print("The sample Length is " + str(num_time_bins))
 
         # Turn the sample stream into events
         x_event = self.samples[i]['x'].to_numpy()
@@ -252,11 +255,16 @@ class VPRDataset(Dataset):
 
 
 # Ultimate test- loading the data
-training_set = VPRDataset(train=True)
-testing_set  = VPRDataset(train=False)
+# training_set = VPRDataset(train=True)
+# testing_set  = VPRDataset(train=False)
             
-train_loader = DataLoader(dataset=training_set, batch_size=32, shuffle=True)
-test_loader  = DataLoader(dataset=testing_set , batch_size=32, shuffle=True)
+# train_loader = DataLoader(dataset=training_set, batch_size=32, shuffle=True)
+# test_loader  = DataLoader(dataset=testing_set , batch_size=32, shuffle=True)
+
+
+
+
+
 
 # for i, (data, labels) in enumerate(train_loader):
 #     print(data.shape, labels.shape)
@@ -270,12 +278,12 @@ test_loader  = DataLoader(dataset=testing_set , batch_size=32, shuffle=True)
 # print(spike_tensor)
 # event = slayer.io.tensor_to_event(spike_tensor.cpu().data.numpy(), sampling_time=2)
 
-for i in range(5):
-    spike_tensor, label = testing_set[np.random.randint(len(testing_set))]
-    spike_tensor = spike_tensor.reshape(2, 34, 34, -1)
-    event = slayer.io.tensor_to_event(spike_tensor.cpu().data.numpy())
-    anim = event.anim(plt.figure(figsize=(5, 5)), frame_rate=240)
-    anim.save(f'gifs/input{i}.gif', animation.PillowWriter(fps=24), dpi=300)
+# for i in range(5):
+#     spike_tensor, label = testing_set[np.random.randint(len(testing_set))]
+#     spike_tensor = spike_tensor.reshape(2, 34, 34, -1)
+#     event = slayer.io.tensor_to_event(spike_tensor.cpu().data.numpy())
+#     anim = event.anim(plt.figure(figsize=(5, 5)), frame_rate=240)
+#     anim.save(f'gifs/input{i}.gif', animation.PillowWriter(fps=24), dpi=300)
 
 # gif_td = lambda gif: f'<td> <img src="{gif}" alt="Drawing" style="height: 250px;"/> </td>'
 # header = '<table><tr>'
